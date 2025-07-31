@@ -27,7 +27,7 @@ export interface IUser {
     role?: Role,
     status: IStatus,
     isVerified ? : boolean;
-    auth ?: IAuth
+    auth ?: IAuth[]
     createdAt?: Date;
     updatedAt?: Date;
 }
