@@ -13,7 +13,7 @@ try {
         throw new AppError(403, "token is not provided")
     }
     const verifyToken = verifyTokens(accessToken, envVar.JWT_ACCESS_SECRET) as JwtPayload
-    if(authRole.includes(verifyToken.role)){
+    if(!authRole.includes(verifyToken.role)){
          throw new AppError(403, "forbidden access to this route")
     }
    req.user = verifyToken
