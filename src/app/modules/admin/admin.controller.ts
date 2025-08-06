@@ -112,4 +112,6 @@ export const AdminController = {
   unblockWallet,
   approveAgent,
   suspendAgent,
+  getCommissionRate,
+  setCommissionRate,
 };

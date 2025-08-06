@@ -1,12 +1,12 @@
 import { catchAsync } from "../../utils/catchAsync";
 import httpStatus from "http-status-codes";
 import { sendResponse } from "../../utils/sendResponse";
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { walletService } from "./wallet.service";
 
 
 
- const getMyWallet = catchAsync(async(req: Request, res: Response, next: NextFunction) =>{
+ const getMyWallet = catchAsync(async(req: Request, res: Response, ) =>{
 
      const userId = req.user.id;
      const result = await walletService.getWallet(userId)
@@ -23,7 +23,7 @@ import { walletService } from "./wallet.service";
 
 
 
-  const addMoney = catchAsync(async(req: Request, res: Response, next: NextFunction) =>{
+  const addMoney = catchAsync(async(req: Request, res: Response) =>{
  
       const wallet= await walletService.addMoney(req.user.id, req.body.amount)
  
@@ -37,7 +37,7 @@ import { walletService } from "./wallet.service";
           })
   }) 
 
-  const blockWallet = catchAsync(async(req: Request, res: Response, next: NextFunction) =>{
+  const blockWallet = catchAsync(async(req: Request, res: Response) =>{
     const walletId = req.params.id;
     const result = await walletService.blockWallet(walletId);
 

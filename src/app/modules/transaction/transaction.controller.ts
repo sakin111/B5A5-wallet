@@ -1,5 +1,5 @@
 
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import httpStatus from 'http-status-codes';
 
 import { transactionService } from './transaction.service';
@@ -7,7 +7,7 @@ import { sendResponse } from '../../utils/sendResponse';
 import { catchAsync } from '../../utils/catchAsync';
 
 
-const sendMoney = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const sendMoney = catchAsync(async (req: Request, res: Response,) => {
   const result = await transactionService.sendMoney(req.user.id, req.body.toUserId, req.body.amount);
 
   sendResponse(res, {
@@ -18,7 +18,7 @@ const sendMoney = catchAsync(async (req: Request, res: Response, next: NextFunct
   });
 });
 
-const withdraw = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const withdraw = catchAsync(async (req: Request, res: Response) => {
   const result = await transactionService.withdrawMoney(req.user.id, req.body.amount);
 
   sendResponse(res, {
@@ -29,7 +29,7 @@ const withdraw = catchAsync(async (req: Request, res: Response, next: NextFuncti
   });
 });
 
-const cashIn = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const cashIn = catchAsync(async (req: Request, res: Response) => {
   const result = await transactionService.cashIn(req.user.id, req.body.toUserId, req.body.amount);
 
   sendResponse(res, {
@@ -40,7 +40,7 @@ const cashIn = catchAsync(async (req: Request, res: Response, next: NextFunction
   });
 });
 
-const cashOut = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const cashOut = catchAsync(async (req: Request, res: Response) => {
   const result = await transactionService.cashOut(req.user.id, req.body.toUserId, req.body.amount);
 
   sendResponse(res, {
@@ -51,7 +51,7 @@ const cashOut = catchAsync(async (req: Request, res: Response, next: NextFunctio
   });
 });
 
-const getMyTransactions = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const getMyTransactions = catchAsync(async (req: Request, res: Response) => {
   const result = await transactionService.getMyTransactions(req.user.id);
 
   sendResponse(res, {

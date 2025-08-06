@@ -1,5 +1,5 @@
 
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse"
 import httpStatus from "http-status-codes";
@@ -13,7 +13,7 @@ import { setAuthCookies } from "../../utils/setCookies";
 
 
 
-const CredentialLogin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const CredentialLogin = catchAsync(async (req: Request, res: Response) => {
     const loginInfo = await authServices.credentialsLogin(req.body)
   
     const user = loginInfo.user;
@@ -34,7 +34,7 @@ const CredentialLogin = catchAsync(async (req: Request, res: Response, next: Nex
   });
 
 
-const getNewAccessToken = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const getNewAccessToken = catchAsync(async (req: Request, res: Response) => {
   const refreshToken = req.cookies.refreshToken
   if (!refreshToken) {
     throw new AppError(httpStatus.BAD_REQUEST, "can not found refresh token")
@@ -59,7 +59,7 @@ const getNewAccessToken = catchAsync(async (req: Request, res: Response, next: N
 })
 
 
-const logout = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const logout = catchAsync(async (req: Request, res: Response) => {
 
 
   res.clearCookie("accessToken", {
@@ -88,7 +88,7 @@ const logout = catchAsync(async (req: Request, res: Response, next: NextFunction
 
 
 
-const resetPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const resetPassword = catchAsync(async (req: Request, res: Response) => {
 
   const newPassword = req.body.newPassword;
   const oldPassword = req.body.oldPassword;

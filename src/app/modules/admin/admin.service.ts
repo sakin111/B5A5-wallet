@@ -39,7 +39,7 @@ const unblockWallet = async (walletId: string) => {
 const approveAgent = async (agentId: string) => {
   const agent = await User.findById(agentId);
   if (!agent || agent.role !== 'AGENT') throw new AppError( httpStatus.NOT_FOUND,'Wallet not found');
-  agent.status = IStatus.APPROVED,
+  agent.status = IStatus.APPROVED;
   agent.role = Role.AGENT;
   await agent.save();
   return agent;

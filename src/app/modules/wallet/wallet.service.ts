@@ -1,7 +1,5 @@
-import { Request } from "express";
+
 import AppError from "../../errorBuilder/AppError";
-import { User } from "../user/user.model";
-import { IWallet } from "./wallet.interface";
 import { Wallet } from "./wallet.model";
 import httpStatus from "http-status-codes"
 import { Transaction } from "../transaction/transaction.model";

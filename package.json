@@ -4,7 +4,9 @@
   "description": "\"# B5A5-wallet\"",
   "main": "index.js",
   "scripts": {
+     "start": "node ./dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
+    "build": "tsc",
     "lint": "npx eslint ./src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

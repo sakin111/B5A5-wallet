@@ -8,6 +8,7 @@ import { SystemService } from "../system/system.service";
 import { CommissionService } from "../commission/commission.service";
 
 
+
 const sendMoney = async(fromUser: string, toUser: string, amount: number) =>{
      const fromWallet = await Wallet.findOne({ user: fromUser, status: 'ACTIVE' });
     const toWallet = await Wallet.findOne({ user: toUser, status: 'ACTIVE' });
@@ -15,7 +16,9 @@ const sendMoney = async(fromUser: string, toUser: string, amount: number) =>{
     if (!fromWallet || !toWallet) {
       throw new AppError(httpStatus.NOT_FOUND,'One of the wallets does not exist or is blocked');
     }
-   
+  if (fromWallet.status !== 'ACTIVE' || toWallet.status !== 'ACTIVE') {
+    throw new AppError(httpStatus.FORBIDDEN, 'One of the wallets is blocked');
+  }
     if (fromWallet.balance < amount) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Insufficient balance');
     }
@@ -33,6 +36,9 @@ const withdrawMoney = async(userId: string, amount: number) =>{
     const wallet = await Wallet.findOne({ user: userId, status: 'ACTIVE' });
     if (!wallet) {
       throw new AppError(httpStatus.NOT_FOUND, 'Wallet not found or blocked');
+    }
+    if (wallet.status !== 'ACTIVE') {
+      throw new AppError(httpStatus.FORBIDDEN, 'Wallet is blocked');
     }
     if (wallet.balance < amount) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Insufficient balance');

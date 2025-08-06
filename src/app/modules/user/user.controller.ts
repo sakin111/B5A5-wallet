@@ -1,6 +1,6 @@
 
 
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import httpStatus from "http-status-codes";
 import { catchAsync } from "../../utils/catchAsync";
 import { userService } from "./user.service";
@@ -11,7 +11,7 @@ import { sendResponse } from "../../utils/sendResponse";
 
 
 
- const createUser = catchAsync(async(req: Request, res: Response, next: NextFunction) =>{
+ const createUser = catchAsync(async(req: Request, res: Response) =>{
 
 
      const result = await userService.createUser(req.body)
@@ -26,7 +26,7 @@ import { sendResponse } from "../../utils/sendResponse";
             
          })
  }) 
- const updatedUser = catchAsync(async(req: Request, res: Response, next: NextFunction) =>{
+ const updatedUser = catchAsync(async(req: Request, res: Response) =>{
 
   const userId = req.params.id
   const verifyToken = req.user
@@ -44,7 +44,7 @@ import { sendResponse } from "../../utils/sendResponse";
          })
  }) 
 
-const  getAllUser = catchAsync(async(req: Request, res: Response, next: NextFunction) =>{
+const  getAllUser = catchAsync(async(req: Request, res: Response) =>{
         const result = await userService.getAllUser()
         sendResponse(res,{
            success: true,

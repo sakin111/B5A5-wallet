@@ -15,6 +15,8 @@ const getAllCommissions = async () => {
   return await Commission.find().populate('agent').sort({ createdAt: -1 });
 };
 
+
+
 export const CommissionService = {
   createCommission,
   getAgentCommissions,
