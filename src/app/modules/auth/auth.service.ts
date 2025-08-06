@@ -12,6 +12,10 @@ import { createNewAccessTokenWithRefreshToken, createUserTokens } from "../../ut
 
 
 const credentialsLogin = async (payload: Partial<IUser>) => {
+    
+      if (!payload || !payload.email || !payload.password) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Email and password are required");
+  }
     const { email, password } = payload;
 
     const isUserExist = await User.findOne({ email })

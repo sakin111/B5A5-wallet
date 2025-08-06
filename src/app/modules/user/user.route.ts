@@ -8,8 +8,8 @@ import { UserController } from "./user.controller";
 
 const router = Router()
 
-router.post("/register" , checkAuth(Role.ADMIN), validateRequest(createUserZodSchema), UserController.createUser )
-router.get("/all-user", UserController.getAllUser)
+router.post("/register" ,  UserController.createUser )
+router.get("/all-user",checkAuth(Role.ADMIN), validateRequest(createUserZodSchema), UserController.getAllUser)
 router.get("/:id", validateRequest(updateUserZodSchema), checkAuth(...Object.values(Role)), UserController.updatedUser)
 
 

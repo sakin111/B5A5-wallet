@@ -14,7 +14,10 @@ export interface IAuth {
 
 export enum IStatus {
   ACTIVE = "ACTIVE",
-  BLOCKED = "BLOCKED"
+  BLOCKED = "BLOCKED",
+  SUSPENDED = "SUSPENDED",
+  APPROVED = "APPROVED",
+
 }
 
 

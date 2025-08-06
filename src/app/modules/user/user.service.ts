@@ -5,14 +5,19 @@ import { User } from "./user.model";
 import bcrypt from "bcryptjs"
 import { envVar } from "../../config/env";
 import { JwtPayload } from "jsonwebtoken";
+import { WalletStatus } from "../wallet/wallet.interface";
+import { Wallet } from "../wallet/wallet.model";
 
 const createUser = async(payload : Partial<IUser>) =>{
    const {email, password , ...rest} = payload
+     if (!email || !password) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Email and password are required');
+  }
      const isUserExist = await User.findOne({email})
     if(isUserExist){
         throw new AppError(httpStatus.BAD_REQUEST, "user already exist")
     }
-    const hashPassword = bcrypt.hash(password as string, Number(envVar.BCRYPT_SALT_ROUND))
+    const hashPassword =  await bcrypt.hash(password as string, Number(envVar.BCRYPT_SALT_ROUND))
     const AuthProvider : IAuth =  {provider: "Credential", providerId: email as string}
     const user = await User.create({
         email,
@@ -20,7 +25,15 @@ const createUser = async(payload : Partial<IUser>) =>{
         auth: [AuthProvider],
         ...rest
     })
-    return user
+    const createWallet = await Wallet.create({
+        user: user._id,
+        balance: 50,
+        status: WalletStatus.ACTIVE                                                                                     
+
+    })
+    return {
+        user, createWallet
+    }
 }
 
 const updateUser = async (userId: string, payload:Partial<IUser>, decodedToken:JwtPayload) =>{
@@ -33,10 +46,10 @@ const updateUser = async (userId: string, payload:Partial<IUser>, decodedToken:J
 
     
     if(payload.role){
-        if(decodedToken.role === Role.USER || decodedToken.role === Role.USER){
+        if(decodedToken.role === Role.USER || decodedToken.role === Role.AGENT){
             throw new AppError(httpStatus.FORBIDDEN, "you are unauthorized")
         }
-        if(payload.role === Role.AGENT && decodedToken.role === Role.AGENT){
+        if(payload.role === Role.USER && decodedToken.role === Role.AGENT){
      throw new AppError(httpStatus.FORBIDDEN, "you are unauthorized")
         }
 

@@ -12,12 +12,10 @@ import { sendResponse } from "../../utils/sendResponse";
 
 
  const createUser = catchAsync(async(req: Request, res: Response, next: NextFunction) =>{
+
+
      const result = await userService.createUser(req.body)
 
-         res.status(httpStatus.CREATED).json({
-            message : "User created successfully",
-            user: result
-         })
 
          sendResponse(res,{
            success: true,
@@ -35,12 +33,6 @@ import { sendResponse } from "../../utils/sendResponse";
 
      const payload = req.body
      const result = await userService.updateUser(userId, payload, verifyToken)
-  
-
-         res.status(httpStatus.CREATED).json({
-            message : "User created successfully",
-            user: result
-         })
 
          sendResponse(res,{
            success: true,

@@ -9,8 +9,9 @@ import notFound from './app/middleware/notFound'
 
 const app = express()
 
-app.use(cookieParser())
+
 app.use(express.json())
+app.use(cookieParser())
 app.use(cors())
 app.use("/api/v1", router)
 

@@ -1,15 +1,15 @@
 import { envVar } from "../config/env";
-import { IAuth, IUser } from "../modules/user/user.interface";
+import { IAuth, IUser, Role } from "../modules/user/user.interface";
 import { User } from "../modules/user/user.model";
 import bcrypt from "bcryptjs"
 
 
  export const seedAdmin = async() => {
     try {
-        const isSuperAdminExists = await User.findOne({email : envVar.ADMIN_EMAIL})
+        const isAdminExists = await User.findOne({email : envVar.ADMIN_EMAIL})
 
-        if(isSuperAdminExists){
-            console.log("super admin already exists")
+        if(isAdminExists){
+            console.log(" admin already exists")
             return
         }
 
@@ -21,7 +21,8 @@ import bcrypt from "bcryptjs"
  const hashPassword = await bcrypt.hash(envVar.ADMIN_PASSWORD, Number(envVar.BCRYPT_SALT_ROUND) )
 
    const payload: Partial<IUser> = {
-    name: "super admin",
+    name: "admin",
+    role: Role.ADMIN,
     email: envVar.ADMIN_EMAIL,
     password: hashPassword, 
     isVerified: true,
