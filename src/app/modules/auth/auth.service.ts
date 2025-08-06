@@ -3,8 +3,6 @@ import { IUser } from "../user/user.interface"
 import { User } from "../user/user.model"
 import httpStatus from "http-status-codes"
 import bcrypt from "bcryptjs"
-
-import { verifyTokens } from "../../utils/jwt"
 import { envVar } from "../../config/env"
 import { JwtPayload } from "jsonwebtoken"
 import AppError from "../../errorBuilder/AppError"
