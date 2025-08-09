@@ -60,6 +60,7 @@ const  getAllUser = catchAsync(async(req: Request, res: Response) =>{
 
 const  getUserById = catchAsync(async(req: Request, res: Response) =>{
         const userId = req.params.id;
+ 
         const result = await userService.getUserById(userId)
         sendResponse(res,{
            success: true,
