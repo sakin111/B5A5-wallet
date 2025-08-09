@@ -19,7 +19,7 @@ app.use("/api/v1", router)
 
 app.get("/" , ( req:Request, res: Response ) =>{
     res.status(200).json({
-        message: "Welcome to the PH Tour Management backend"
+        message: "Welcome to the pocket wallet backend"
     })
 })
 
