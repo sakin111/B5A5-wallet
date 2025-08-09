@@ -11,6 +11,7 @@ const app = express()
 
 
 app.use(express.json())
+app.set("trust proxy", 1) 
 app.use(cookieParser())
 app.use(cors())
 app.use("/api/v1", router)
