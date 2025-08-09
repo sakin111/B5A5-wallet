@@ -3,19 +3,22 @@ import httpStatus from 'http-status-codes';
 import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 import { CommissionService } from './commission.service';
+import { userService } from '../user/user.service';
 
 
 
-const getAgentCommission = catchAsync(async (req : Request, res: Response) => {
-  const agentId = req.user.userId
-  const singleCommission = await CommissionService.getAgentCommissionSummary(agentId);
-    sendResponse(res, {
+const getAgentCommission = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.id;
+  const result = await userService.getAgentCommissionById(userId);
+
+  sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'agent commissions fetched successfully',
-    data: singleCommission,
+    message: "User commission retrieved successfully",
+    data: result.data,
   });
 });
+
 
 
 const getAllCommissions = catchAsync(async (req: Request, res: Response) => {

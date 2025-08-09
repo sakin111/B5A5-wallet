@@ -90,11 +90,15 @@ const getUserById = async(userId: string) => {
     }
 }
 
-
+const getAgentCommissionById = async (userId: string) => {
+  const result = await User.findOne({ _id: userId }).select('commission');
+  return { data: result?.commissionRate };
+};
 
 export const userService ={
     createUser,
     updateUser,
     getAllUser,
-    getUserById 
+    getUserById ,
+    getAgentCommissionById
 }
