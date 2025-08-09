@@ -1,52 +1,68 @@
-# B5A5-wallet Project
+git clone https://github.com/yourusername/B5A5-wallet.git
+# B5A5-wallet
 
-## Overview
-This project implements a robust digital wallet system using TypeScript, Node.js, Express, and MongoDB with Mongoose. It provides a reliable platform for handling digital payments and maintaining user account balances through a RESTful API.
+## Project Overview
+B5A5-wallet is a robust digital wallet system built with TypeScript, Node.js, Express, and MongoDB (Mongoose). It provides a secure platform for digital payments, user management, wallet operations, transactions, commissions, and admin functionalities via a RESTful API.
 
 ## Tech Stack
 - TypeScript
 - Node.js
 - Express.js
-- MongoDB
-- Mongoose
+- MongoDB & Mongoose
+- JWT (Authentication)
+- Zod (Validation)
+- ESLint (Linting)
 
 ## Features
-- **Secure Transaction Management**
-    - End-to-end encryption
-    - Transaction verification
-    - History tracking
-- **Balance Tracking**
-    - Real-time balance updates
-    - Spending analytics
-- **User Account Management**
-    - Secure authentication
+- User registration, authentication, and management
+- Wallet creation and balance tracking
+- Secure transaction management
+- Commission and system settings
+- Admin and agent modules
+- Centralized error handling
+- Request validation
 
+## Setup & Environment Instructions
 
-## Installation
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/B5A5-wallet.git
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/yourusername/B5A5-wallet.git
+    cd B5A5-wallet
+    ```
+2. **Install dependencies:**
+    ```bash
+    npm install
+    ```
+3. **Configure environment variables:**
+    - Copy `example.env` to `.env` and fill in required values.
+4. **Start the development server:**
+    ```bash
+    npm run dev
+    ```
 
-# Navigate to project directory
-cd B5A5-wallet
+## API Endpoints Summary
 
-# Install dependencies
-npm install
+| Method | Endpoint                        | Description                        |
+|--------|----------------------------------|------------------------------------|
+| POST   | /api/v1/auth/register           | Register a new user                |
+| POST   | /api/v1/auth/login              | User login                         |
+| GET    | /api/v1/users                   | Get all users                      |
+| GET    | /api/v1/users/:id               | Get user by ID                     |
+| PATCH  | /api/v1/users/:id               | Update user by ID                  |
+| POST   | /api/v1/wallets                 | Create wallet for user             |
+| GET    | /api/v1/wallets/:id             | Get wallet by user ID              |
+| PATCH  | /api/v1/wallets/:id             | Update wallet (e.g., balance)      |
+| POST   | /api/v1/transactions            | Create a transaction               |
+| GET    | /api/v1/transactions            | Get all transactions               |
+| GET    | /api/v1/transactions/:id        | Get transaction by ID              |
+| POST   | /api/v1/commissions             | Create commission                  |
+| GET    | /api/v1/commissions             | Get all commissions                |
+| GET    | /api/v1/commissions/:id         | Get commission by ID               |
+| GET    | /api/v1/system                  | Get system settings                |
+| PATCH  | /api/v1/system                  | Update system settings             |
+| ...    | ...                             | Additional admin/agent endpoints   |
 
-# Configure environment variables
-cp .env.example .env
-
-# Start development server
-npm run dev
-```
-
-## API Usage
-```typescript
-// Example API endpoints
-POST /api/v1/register
-GET /api/v1/users
-
-```
+> **Note:** For full details, see the Postman collection (`wallet.postman_collection.json`) or the route files in `src/app/modules/`.
 
 ## Contributing
 1. Create your feature branch (`git checkout -b feature/AmazingFeature`)
