@@ -5,7 +5,7 @@ import { Role } from '../user/user.interface';
 
 const router = express.Router();
 
-router.get('/my-commissions', checkAuth(Role.AGENT), CommissionController.getMyCommissions);
+router.get('/my-commissions', checkAuth(Role.AGENT, Role.ADMIN), CommissionController.getAgentCommission);
 router.get('/all-commission', checkAuth(Role.ADMIN), CommissionController.getAllCommissions);
 
 export const CommissionRoutes = router;

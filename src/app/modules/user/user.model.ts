@@ -15,7 +15,7 @@ const AuthSchema = new Schema<IAuth>({
 const userSchema = new Schema<IUser>({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String , required : true},
+    password: { type: String, required: true },
     role: {
         type: String,
         enum: Object.values(Role),
@@ -29,9 +29,13 @@ const userSchema = new Schema<IUser>({
         default: IStatus.ACTIVE
     },
     isVerified: { type: String, default: 'false' },
-    auth: [AuthSchema]
+    auth: [AuthSchema],
+    commissionRate: {
+        type: Number,
+        default: 0, // Admin can override later
+    },
 }, {
     timestamps: true
 })
 
-export const User= model("User", userSchema)  
+export const User = model("User", userSchema)  

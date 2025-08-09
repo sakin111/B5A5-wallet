@@ -5,7 +5,7 @@ import { SystemSetting } from './system.model';
 export const SystemService = {
   async getCommissionRate() {
     const setting = await SystemSetting.findOne({ key: 'commissionRate' });
-    return setting?.value || 0;
+    return setting?.value ?? 1.5;
   },
 
   async setCommissionRate(rate: number) {

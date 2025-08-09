@@ -1,6 +1,7 @@
+import { Types } from "mongoose";
 
 export interface ICommission {
-    agent: string; 
+    agent: Types.ObjectId; 
     type: 'cash-in' | 'cash-out'; 
     amount: number; 
     transactionAmount?: number;

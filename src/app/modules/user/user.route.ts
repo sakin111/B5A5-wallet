@@ -10,7 +10,8 @@ const router = Router()
 
 router.post("/register" ,  UserController.createUser )
 router.get("/all-user",checkAuth(Role.ADMIN), validateRequest(createUserZodSchema), UserController.getAllUser)
-router.get("/:id", validateRequest(updateUserZodSchema), checkAuth(...Object.values(Role)), UserController.updatedUser)
+router.patch("update/:id", validateRequest(updateUserZodSchema), checkAuth(...Object.values(Role)), UserController.updatedUser)
+router.get("/:id", UserController.getUserById)
 
 
 export const UserRoutes = router

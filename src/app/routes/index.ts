@@ -6,6 +6,8 @@ import { WalletRoutes } from "../modules/wallet/wallet.route";
 import { AdminRoutes } from "../modules/admin/admin.route";
 import { CommissionRoutes } from "../modules/commission/commission.route";
 import { SystemRoutes } from "../modules/system/system.route";
+import { agentRoutes } from "../modules/agent/agent.route";
+
 
 
 export const router = Router()
@@ -15,6 +17,7 @@ const RouteModules = [
         path: "/user",
         route: UserRoutes
     },
+
     {
         path: "/auth",
         route: authRoute
@@ -27,7 +30,11 @@ const RouteModules = [
         path: "/transaction",
         route: TransactionRoutes
     },
-        {
+    {
+        path: "/agent",
+        route: agentRoutes
+    },
+    {
         path: "/admin",
         route: AdminRoutes
     },
@@ -36,7 +43,7 @@ const RouteModules = [
         path: "/commissions",
         route: CommissionRoutes
     },
- 
+
     {
         path: "/system",
         route: SystemRoutes

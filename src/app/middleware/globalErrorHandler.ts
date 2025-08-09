@@ -35,7 +35,7 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
 
 
   // cast error
-  else if (err.name === "castError") {
+  else if (err.name === "CastError") {
 
     const castThat = handleCastError(err)
     statusCode = castThat.statusCode
@@ -43,7 +43,7 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
   }
 
   // zod error
-  else if (err.name === "zodError") {
+  else if (err.name === "ZodError") {
     const simplifyError = handleZodError(err)
     statusCode = simplifyError.statusCode
     errorSource = simplifyError.errorSource
@@ -52,7 +52,7 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
 
 
   // mongoose validation error
-  else if (err.name === "validationError") {
+  else if (err.name === "ValidationError") {
     const simpleValidation = handleValidationError(err)
     statusCode = simpleValidation.statusCode
     errorSource = simpleValidation.errorSource
@@ -68,7 +68,7 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
   }
 
   res.status(statusCode).json({
-    success: true,
+    success: false,
     message,
     errorSource,
     err: envVar.NODE_ENV === "development" ? err : null,

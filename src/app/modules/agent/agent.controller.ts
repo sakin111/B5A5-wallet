@@ -7,7 +7,10 @@ import httpStatus from 'http-status-codes';
 import { AgentService } from './agent.service';
 
 const getMyProfile = catchAsync(async (req: Request, res: Response) => {
-  const result = await AgentService.getAgentProfile(req.user._id);
+
+  const agentId = req.user.userId;
+  const result = await AgentService.getAgentProfile(agentId);
+ 
 
   sendResponse(res, {
     success: true,
@@ -19,7 +22,8 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
 
 
 const getMyTransactions = catchAsync(async (req: Request, res: Response) => {
-  const result = await AgentService.getAgentTransactions(req.user._id);
+  const agentId = req.user.userId;
+  const result = await AgentService.getAgentTransactions(agentId );
 
   sendResponse(res, {
     success: true,
@@ -29,19 +33,9 @@ const getMyTransactions = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getMyCommissions = catchAsync(async (req: Request, res: Response) => {
-  const result = await AgentService.getAgentCommissionHistory(req.user._id);
 
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: 'Agent commission history fetched successfully',
-    data: result,
-  });
-});
 
 export const AgentController = {
   getMyProfile,
   getMyTransactions,
-  getMyCommissions,
 };

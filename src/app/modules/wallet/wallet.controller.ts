@@ -6,6 +6,7 @@ import { walletService } from "./wallet.service";
 
 
 
+
  const getMyWallet = catchAsync(async(req: Request, res: Response, ) =>{
 
      const userId = req.user.id;
@@ -37,21 +38,34 @@ import { walletService } from "./wallet.service";
           })
   }) 
 
-  const blockWallet = catchAsync(async(req: Request, res: Response) =>{
-    const walletId = req.params.id;
-    const result = await walletService.blockWallet(walletId);
+const blockWallet = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.userId;
 
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'Wallet blocked successfully',
-      data: result,
-    });
-  })
+  const result = await walletService.blockWallet(userId);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Wallet blocked successfully',
+    data: result,
+  });
+});
 
+const unblockWallet = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+  const result = await walletService.unblockWallet(userId);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Wallet unblocked successfully',
+    data: result,
+  });
+});
+
+  
 
  export const walletController = {
     getMyWallet,
     addMoney,
-    blockWallet
+    blockWallet,
+    unblockWallet
  } 

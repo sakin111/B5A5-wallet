@@ -5,8 +5,9 @@ import { z } from 'zod';
 
 
 export const SendMoneySchema = z.object({
-    toUserId:  z.string(),
-    amount: z.number().positive('Amount must be positive'),
+  fromUserId: z.string(),
+  toUserId: z.string(),
+  amount: z.number().positive('Amount must be positive'),
 });
 
 export const WithdrawSchema = z.object({
@@ -16,11 +17,14 @@ export const WithdrawSchema = z.object({
 
 // For agents
 export const CashInSchema = z.object({
-  toUserId:  z.string(),
-    amount: z.number().positive('Amount must be positive'),
+  fromUserId: z.string(),
+  toUserId: z.string(),
+  amount: z.number().positive('Amount must be positive'),
 });
 
+
+
 export const CashOutSchema = z.object({
-   toUserId: z.string(),
-    amount: z.number().positive('Amount must be positive'),
+  userId: z.string(),  
+  amount: z.number().positive('Amount must be positive'),
 });

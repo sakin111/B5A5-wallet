@@ -8,9 +8,9 @@ type catchAsyncHandler = ( req: Request, res: Response, next: NextFunction) => P
 
 
 export const catchAsync = (fn :catchAsyncHandler ) => (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req,res,next)).catch((err : any) =>{
-        console.log(err)
-        next(err)
+    Promise.resolve(fn(req,res,next)).catch((error : any) =>{
+        console.log(error)
+        next(error)
     })
 
     }

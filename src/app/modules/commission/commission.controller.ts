@@ -4,20 +4,21 @@ import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 import { CommissionService } from './commission.service';
 
-const getMyCommissions = catchAsync(async (req: Request, res: Response) => {
-  const agentId = req.user._id;
 
-  const commissions = await CommissionService.getAgentCommissions(agentId);
 
-  sendResponse(res, {
+const getAgentCommission = catchAsync(async (req : Request, res: Response) => {
+  const agentId = req.user.userId
+  const singleCommission = await CommissionService.getAgentCommissionSummary(agentId);
+    sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Agent commission history fetched successfully',
-    data: commissions,
+    message: 'agent commissions fetched successfully',
+    data: singleCommission,
   });
 });
 
-const getAllCommissions = catchAsync(async (_req: Request, res: Response) => {
+
+const getAllCommissions = catchAsync(async (req: Request, res: Response) => {
   const commissions = await CommissionService.getAllCommissions();
 
   sendResponse(res, {
@@ -29,6 +30,6 @@ const getAllCommissions = catchAsync(async (_req: Request, res: Response) => {
 });
 
 export const CommissionController = {
-  getMyCommissions,
+  getAgentCommission,
   getAllCommissions,
 };

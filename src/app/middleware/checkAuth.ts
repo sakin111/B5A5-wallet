@@ -9,6 +9,7 @@ import AppError from "../errorBuilder/AppError";
 export const checkAuth = (...authRole : string[]) => (req: Request, res: Response, next: NextFunction) =>{
 try {
         const accessToken = req.headers.authorization
+
     if(!accessToken){
         throw new AppError(403, "token is not provided")
     }
@@ -21,6 +22,6 @@ try {
     
 } catch (error) {
     console.log("jwt error", error)
-    next()
+    next(error)
 }
 }

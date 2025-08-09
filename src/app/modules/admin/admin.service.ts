@@ -6,7 +6,7 @@ import { Transaction } from '../transaction/transaction.model';
 import AppError from '../../errorBuilder/AppError';
 import httpStatus from 'http-status-codes';
 import { IStatus, Role } from '../user/user.interface';
-import { WalletStatus } from '../wallet/wallet.interface';
+
 
 const getAllUsers = async () => {
   return await User.find();
@@ -20,30 +20,21 @@ const getAllTransactions = async () => {
   return await Transaction.find().populate(['from', 'to']);
 };
 
-const blockWallet = async (walletId: string) => {
-  const wallet = await Wallet.findById(walletId);
-  if (!wallet) throw new AppError( httpStatus.NOT_FOUND,'Wallet not found');
-  wallet.status = WalletStatus.BLOCKED;
-  await wallet.save();
-  return wallet;
-};
 
-const unblockWallet = async (walletId: string) => {
-  const wallet = await Wallet.findById(walletId);
-  if (!wallet) throw new AppError( httpStatus.NOT_FOUND,'Wallet not found');
-  wallet.status = WalletStatus.ACTIVE
-  await wallet.save();
-  return wallet;
-};
 
 const approveAgent = async (agentId: string) => {
-  const agent = await User.findById(agentId);
-  if (!agent || agent.role !== 'AGENT') throw new AppError( httpStatus.NOT_FOUND,'Wallet not found');
-  agent.status = IStatus.APPROVED;
-  agent.role = Role.AGENT;
-  await agent.save();
-  return agent;
+  const user = await User.findById(agentId);
+  if (!user) throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  if (user.role !== Role.USER) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'User is not eligible for agent approval');
+  }
+
+  user.role = Role.AGENT;
+  user.status = IStatus.APPROVED;
+  await user.save();
+  return user;
 };
+
 
 const suspendAgent = async (agentId: string) => {
   const agent = await User.findById(agentId);
@@ -54,13 +45,21 @@ const suspendAgent = async (agentId: string) => {
   return agent;
 };
 
+const activeAgent = async (agentId: string) => {
+  const agent = await User.findById(agentId);
+  if (!agent || agent.role !== 'AGENT') throw new AppError( httpStatus.NOT_FOUND,'Wallet not found');
+  agent.status = IStatus.ACTIVE
+
+  await agent.save();
+  return agent;
+};
+
 
 export const AdminService = {
   getAllUsers,
   getAllWallets,
   getAllTransactions,
-  blockWallet,
-  unblockWallet,
   approveAgent,
   suspendAgent,
+  activeAgent
 };

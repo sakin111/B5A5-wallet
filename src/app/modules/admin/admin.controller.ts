@@ -36,27 +36,6 @@ const getAllTransactions = catchAsync(async (_req: Request, res: Response) => {
   });
 });
 
-const blockWallet = catchAsync(async (req: Request, res: Response) => {
-  const walletId = req.params.id;
-  const result = await AdminService.blockWallet(walletId);
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: 'Wallet blocked successfully',
-    data: result,
-  });
-});
-
-const unblockWallet = catchAsync(async (req: Request, res: Response) => {
-  const walletId = req.params.id;
-  const result = await AdminService.unblockWallet(walletId);
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: 'Wallet unblocked successfully',
-    data: result,
-  });
-});
 
 const approveAgent = catchAsync(async (req: Request, res: Response) => {
   const agentId = req.params.id;
@@ -76,6 +55,16 @@ const suspendAgent = catchAsync(async (req: Request, res: Response) => {
     success: true,
     statusCode: httpStatus.OK,
     message: 'Agent suspended successfully',
+    data: result,
+  });
+});
+const activeAgent = catchAsync(async (req: Request, res: Response) => {
+  const agentId = req.params.id;
+  const result = await AdminService.activeAgent(agentId);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Agent active successfully',
     data: result,
   });
 });
@@ -108,10 +97,9 @@ export const AdminController = {
   getAllUsers,
   getAllWallets,
   getAllTransactions,
-  blockWallet,
-  unblockWallet,
   approveAgent,
   suspendAgent,
+  activeAgent,
   getCommissionRate,
   setCommissionRate,
 };

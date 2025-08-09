@@ -29,8 +29,9 @@ export interface IUser {
     phone?: string 
     role?: Role,
     status: IStatus,
-    isVerified ? : boolean;
+    isVerified ? : boolean
     auth ?: IAuth[]
+    commissionRate?: number;
     createdAt?: Date;
     updatedAt?: Date;
 }

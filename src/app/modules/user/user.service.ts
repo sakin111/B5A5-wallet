@@ -80,9 +80,21 @@ const getAllUser = async() =>{
     }
 }
 
+const getUserById = async(userId: string) => {
+    const user = await User.findById(userId);
+    return {
+        data:user,
+        meta: {
+            userId
+        }
+    }
+}
+
+
 
 export const userService ={
     createUser,
     updateUser,
-    getAllUser
+    getAllUser,
+    getUserById 
 }

@@ -1,0 +1,771 @@
+{
+	"info": {
+		"_postman_id": "0aadcf35-c58f-4260-b73b-dc1887b45686",
+		"name": "wallet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31978302"
+	},
+	"item": [
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"newUser\",\r\n  \"email\": \"newUser@example.com\",\r\n  \"password\": \"12345678912\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/user/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"email\": \"test@example.com\",\r\n  \"password\": \"123456\",\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user logout",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkzMTFmNjgwZmVlMTBmM2MwZjNhYzgiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc1NDcyNTIwNiwiZXhwIjoxNzU0ODExNjA2fQ.CtF3g1P994MF1mN8aKpzAcCvILfc1ORsXscBZWCt3i0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"email\": \"test@example.com\",\r\n  \"password\": \"123456\",\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/auth/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user reset password",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkzMTFmNjgwZmVlMTBmM2MwZjNhYzgiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc1NDcyNTg0MCwiZXhwIjoxNzU0ODEyMjQwfQ.Ebf0-zaoc6pZH1_StF72Zmmd1dZjirhCOZooCTZq_j4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"oldPassword\": \"12345678\",\r\n  \"newPassword\": \"1234567\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/auth/reset-password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"reset-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \r\n \"email\": \"admin@gmail.com\",\r\n  \"password\": \"1234567\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user transaction",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkzMTFmNjgwZmVlMTBmM2MwZjNhYzgiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc1NDU0OTExMSwiZXhwIjoxNzU0NjM1NTExfQ.w4Hs9iJwSiT6JMUNEtqkm4v4jlwUBRU47R5Wh0cPA0s",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"fromUserId\" : \"689311f780fee10f3c0f3acb\",\r\n  \"toUserId\": \"6893186b80fee10f3c0f3ad5\",\r\n  \"amount\": 10\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/transaction/send",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"transaction",
+						"send"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "agent login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"agent@example.com\",\r\n  \"password\": \"123456789\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "agent transaction cash-in",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk0NTA0ZjNhNWU5OTUyZmI2NTk1ZDQiLCJlbWFpbCI6ImFnZW50QGV4YW1wbGUuY29tIiwicm9sZSI6IkFHRU5UIiwiaWF0IjoxNzU0NjUxMjI0LCJleHAiOjE3NTQ3Mzc2MjR9.5uDTEKopDP4N06kcOPYydPZHMqhH25IlB3aNlolxbqc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"fromUserId\" : \"6894504f3a5e9952fb6595d4\",\r\n  \"toUserId\": \"689311f680fee10f3c0f3ac8\",\r\n  \"amount\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/transaction/cash-in",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"transaction",
+						"cash-in"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "agent transaction cash-out",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk0NTA0ZjNhNWU5OTUyZmI2NTk1ZDQiLCJlbWFpbCI6ImFnZW50QGV4YW1wbGUuY29tIiwicm9sZSI6IkFHRU5UIiwiaWF0IjoxNzU0NjU1MDU0LCJleHAiOjE3NTQ3NDE0NTR9.Vdzq53piVPtSDiGguhhldW_tePjK6rQGf_VYkRzYTv0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{  \r\n  \"userId\": \"689311f680fee10f3c0f3ac8\",\r\n  \"amount\": 1\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/transaction/cash-out",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"transaction",
+						"cash-out"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin to make agent",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYjVjZDJkMmY0ZDExMWY3ZjY3ODYiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1NDcyNjEyMCwiZXhwIjoxNzU0ODEyNTIwfQ.OVNJLsIvK6JcnQZE2P7ZkOtkeT6sHgT1flPkHvkXdio",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/admin/agents/6896fea3353bdf631345b4c0/approve",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"admin",
+						"agents",
+						"6896fea3353bdf631345b4c0",
+						"approve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin suspend",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYjVjZDJkMmY0ZDExMWY3ZjY3ODYiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1NDU1MDM2NiwiZXhwIjoxNzU0NjM2NzY2fQ.wPlq6Ea_ysu8F0tFQa6cVf-UYltSEN_lSHEHhiq5FBU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"status\" : \"APPROVED\" \r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/admin/agents/6894504f3a5e9952fb6595d4/approve",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"admin",
+						"agents",
+						"6894504f3a5e9952fb6595d4",
+						"approve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin make active",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYjVjZDJkMmY0ZDExMWY3ZjY3ODYiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1NDU1MDM2NiwiZXhwIjoxNzU0NjM2NzY2fQ.wPlq6Ea_ysu8F0tFQa6cVf-UYltSEN_lSHEHhiq5FBU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"status\" : \"APPROVED\" \r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/admin/agents/6894504f3a5e9952fb6595d4/approve",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"admin",
+						"agents",
+						"6894504f3a5e9952fb6595d4",
+						"approve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin block",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYjVjZDJkMmY0ZDExMWY3ZjY3ODYiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1NDY2Mjk1NSwiZXhwIjoxNzU0NzQ5MzU1fQ.y8Ywyp5ipixjlQ_m4hWbEIO-frewaCiun1fnSEJZisQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/wallet/block/6893186b80fee10f3c0f3ad5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"wallet",
+						"block",
+						"6893186b80fee10f3c0f3ad5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin unblock",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYjVjZDJkMmY0ZDExMWY3ZjY3ODYiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1NDY2Mjk1NSwiZXhwIjoxNzU0NzQ5MzU1fQ.y8Ywyp5ipixjlQ_m4hWbEIO-frewaCiun1fnSEJZisQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/wallet/block/6893186b80fee10f3c0f3ad5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"wallet",
+						"block",
+						"6893186b80fee10f3c0f3ad5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin all user",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYjVjZDJkMmY0ZDExMWY3ZjY3ODYiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1NDY1NzQxNiwiZXhwIjoxNzU0NzQzODE2fQ.-KvGHtT5pNhy_C954Sr_L0VMG-P1X-FOwK1r6Y4g92U",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"email\": \"test@example.com\",\r\n  \"password\": \"123456\",\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/admin/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"admin",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin all wallet",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYjVjZDJkMmY0ZDExMWY3ZjY3ODYiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1NDY1NzQxNiwiZXhwIjoxNzU0NzQzODE2fQ.-KvGHtT5pNhy_C954Sr_L0VMG-P1X-FOwK1r6Y4g92U",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"email\": \"test@example.com\",\r\n  \"password\": \"123456\",\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/admin/wallets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"admin",
+						"wallets"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin all transaction",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYjVjZDJkMmY0ZDExMWY3ZjY3ODYiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1NDY1NzQxNiwiZXhwIjoxNzU0NzQzODE2fQ.-KvGHtT5pNhy_C954Sr_L0VMG-P1X-FOwK1r6Y4g92U",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"email\": \"test@example.com\",\r\n  \"password\": \"123456\",\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/admin/wallets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"admin",
+						"wallets"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "only user",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkzMTFmNjgwZmVlMTBmM2MwZjNhYzgiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc1NDY2NTQ0OSwiZXhwIjoxNzU0NzUxODQ5fQ.BDjoXnm5pSzvpH80123_t1M4WoO0y2A3xCUHn-XTsdA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/user/689311f680fee10f3c0f3ac8",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"689311f680fee10f3c0f3ac8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "agent user",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk0NTA0ZjNhNWU5OTUyZmI2NTk1ZDQiLCJlbWFpbCI6ImFnZW50QGV4YW1wbGUuY29tIiwicm9sZSI6IkFHRU5UIiwiaWF0IjoxNzU0Njc5NTAxLCJleHAiOjE3NTQ3NjU5MDF9.CBPEn4xgRzsihUDNpSEJVsuy3q9rV4aFg_5yfPrZI1Y",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/agent/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"agent",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "agent transaction",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk0NTA0ZjNhNWU5OTUyZmI2NTk1ZDQiLCJlbWFpbCI6ImFnZW50QGV4YW1wbGUuY29tIiwicm9sZSI6IkFHRU5UIiwiaWF0IjoxNzU0Njc5NTAxLCJleHAiOjE3NTQ3NjU5MDF9.CBPEn4xgRzsihUDNpSEJVsuy3q9rV4aFg_5yfPrZI1Y",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/agent/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"agent",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "agent commission",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk0NTA0ZjNhNWU5OTUyZmI2NTk1ZDQiLCJlbWFpbCI6ImFnZW50QGV4YW1wbGUuY29tIiwicm9sZSI6IkFHRU5UIiwiaWF0IjoxNzU0NjgzOTA1LCJleHAiOjE3NTQ3NzAzMDV9.Omjxgzx50telBZtLJ-zhgBkC6_jJ5GvtNO7wFh5g7Oo",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/commissions/my-commissions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"commissions",
+						"my-commissions"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
