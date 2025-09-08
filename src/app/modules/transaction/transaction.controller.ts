@@ -8,8 +8,7 @@ import { catchAsync } from '../../utils/catchAsync';
 
 
 const sendMoney = catchAsync(async (req: Request, res: Response,) => {
-  const result = await transactionService.sendMoney(req.user.userId, req.body.toUserId, req.body.amount);
-
+  const result = await transactionService.sendMoney(req.user.email, req.body.toEmail, req.body.amount);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -18,19 +17,23 @@ const sendMoney = catchAsync(async (req: Request, res: Response,) => {
   });
 });
 
-const withdraw = catchAsync(async (req: Request, res: Response) => {
-  const result = await transactionService.withdrawMoney(req.user.userId, req.body.amount);
+const cashOut= catchAsync(async (req: Request, res: Response) => {
+  const { agentEmail, amount } = req.body;
+  const fromEmail =req.user.email;
+  const result = await transactionService.cashOut(fromEmail, agentEmail, amount);
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Withdraw successful',
+    message: "Withdraw successful",
     data: result,
   });
 });
 
+
 const cashIn = catchAsync(async (req: Request, res: Response) => {
-  const result = await transactionService.cashIn(req.user._id, req.body.toUserId, req.body.amount);
+  
+  const result = await transactionService.cashIn(req.user.email, req.body.toUserId, req.body.amount);
 
   sendResponse(res, {
     success: true,
@@ -40,34 +43,24 @@ const cashIn = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const cashOut = catchAsync(async (req: Request, res: Response) => {
 
-   const agentId = req.user._id; 
-  const { userId, amount } = req.body;
-  const result = await transactionService.cashOut(agentId, userId, amount);
-
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: 'Cash-out successful',
-    data: result,
-  });
-});
 
 const getMyTransactions = catchAsync(async (req: Request, res: Response) => {
-  const result = await transactionService.getMyTransactions(req.user.id);
+   const query = req.query
+  const result = await transactionService.getMyTransactions(req.user.id, query as Record<string, string>);
+
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: 'Transaction history fetched successfully',
     data: result,
+    meta: result.meta,
   });
 });
 
 export const TransactionController = {
   sendMoney,
-  withdraw,
   cashIn,
   cashOut,
   getMyTransactions,

@@ -13,12 +13,13 @@ export interface envConfig {
    BCRYPT_SALT_ROUND : string
    ADMIN_EMAIL: string
    ADMIN_PASSWORD : string
+   FRONTEND_URL : string
 
 }
 
 
 const envProviders = (): envConfig => {
-    const requiredConfig: string[] = ['PORT', 'DB_URL', 'NODE_ENV','JWT_ACCESS_EXPIRE', 'JWT_ACCESS_SECRET', 'JWT_ACCESS_SECRET', 'JWT_ACCESS_SECRET' , 'BCRYPT_SALT_ROUND','ADMIN_EMAIL', 'ADMIN_PASSWORD']
+    const requiredConfig: string[] = ['PORT', 'DB_URL', 'NODE_ENV','JWT_ACCESS_EXPIRE', 'JWT_ACCESS_SECRET', 'JWT_ACCESS_SECRET', 'JWT_ACCESS_SECRET' , 'BCRYPT_SALT_ROUND','ADMIN_EMAIL', 'ADMIN_PASSWORD','FRONTEND_URL']
     requiredConfig.forEach((key) => {
         if (!process.env[key]) {
             throw new Error(`please define the ${key} in your .env file`)
@@ -35,6 +36,7 @@ const envProviders = (): envConfig => {
         BCRYPT_SALT_ROUND: process.env.BCRYPT_SALT_ROUND as string,
         ADMIN_EMAIL: process.env.ADMIN_EMAIL as string,
         ADMIN_PASSWORD: process.env.ADMIN_PASSWORD as string,
+        FRONTEND_URL: process.env.FRONTEND_URL as string,
 
     }
 }

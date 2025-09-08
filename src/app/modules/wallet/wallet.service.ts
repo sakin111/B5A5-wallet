@@ -10,10 +10,13 @@ import { Types } from "mongoose";
 
 
 
-const getWallet = async(userId : string) =>{
-  const service = await Wallet.findOne({user: userId})
-  return service
-}
+const getWallet = async (userId: string) => {
+  const wallet = await Wallet.findOne({ user: userId });
+  if (!wallet) {
+   throw new AppError(httpStatus.NOT_FOUND, 'Wallet not found');
+  }
+  return wallet;
+};
 
 
 const addMoney = async(userId: string, amount: number) =>{

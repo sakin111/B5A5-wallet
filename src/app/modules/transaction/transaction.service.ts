@@ -5,11 +5,25 @@ import { Transaction } from "./transaction.model";
 import mongoose from "mongoose";
 import { SystemService } from "../system/system.service";
 import { CommissionService } from "../commission/commission.service";
-import { Types } from "mongoose";
+import { User } from "../user/user.model";
+import { Role } from "../user/user.interface";
+import { QueryBuilder } from "../../utils/QueryBuilder";
 
 
 
-const sendMoney = async (fromUser: string, toUser: string, amount: number) => {
+
+const sendMoney = async (fromEmail: string, toEmail: string, amount: number) => {
+
+
+const fromUser = await User.findOne({ email: new RegExp(`^${fromEmail}$`, 'i') });
+const toUser = await User.findOne({ email: new RegExp(`^${toEmail}$`, 'i') });
+
+
+  
+  if (!fromUser || !toUser) {
+    throw new AppError(httpStatus.NOT_FOUND, 'One of the users does not exist');
+  }
+
   const fromWallet = await Wallet.findOne({ user: fromUser, status: 'ACTIVE' });
   const toWallet = await Wallet.findOne({ user: toUser, status: 'ACTIVE' });
 
@@ -24,29 +38,100 @@ const sendMoney = async (fromUser: string, toUser: string, amount: number) => {
 
   fromWallet.balance -= amount;
   toWallet.balance += amount;
+  const newBalance = fromWallet.balance -= amount;
   await fromWallet.save();
   await toWallet.save();
 
-  await Transaction.create({ from: fromUser, to: toUser, amount, type: 'SEND' });
+  await Transaction.create({ from: fromUser, to: toUser, amount, type: 'SEND', newBalance: newBalance });
 
 }
 
-const withdrawMoney = async (userId: string, amount: number) => {
-  const wallet = await Wallet.findOne({ user: userId, status: 'ACTIVE' });
-  if (!wallet) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Wallet not found or blocked');
+const cashOut = async (fromEmail: string, agentEmail: string, amount: number) => {
+  const session = await mongoose.startSession();
+  
+  try {
+    session.startTransaction();
+
+    const fromUser = await User.findOne({ email: fromEmail }).session(session);
+    if (!fromUser) {
+      throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+    }
+
+    const agentUser = await User.findOne({ email: agentEmail, role: Role.AGENT }).session(session);
+    if (!agentUser) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Agent not found');
+    }
+
+    const userWallet = await Wallet.findOne({ user: fromUser._id, status: 'ACTIVE' }).session(session);
+    if (!userWallet) {
+      throw new AppError(httpStatus.NOT_FOUND, 'User wallet not found or blocked');
+    }
+
+    const agentWallet = await Wallet.findOne({ user: agentUser._id, status: 'ACTIVE' }).session(session);
+    if (!agentWallet) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Agent wallet not found or blocked');
+    }
+
+
+    if (userWallet.balance < amount) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Insufficient balance');
+    }
+
+
+    userWallet.balance -= amount;
+    agentWallet.balance += amount;
+
+
+    await userWallet.save({ session });
+    await agentWallet.save({ session });
+
+    const [transaction] = await Transaction.create(
+      [
+        {
+          from: fromUser._id,
+          to: agentUser._id,
+          amount,
+          type: 'CASH_OUT',
+          status: 'completed',
+        },
+      ],
+      { session }
+    );
+
+    // 7. Calculate and record the commission for the agent
+    const commissionRate = await SystemService.getCommissionRate();
+    const commissionAmount = (amount * commissionRate) / 100;
+
+    await CommissionService.createCommission(
+      {
+        agent: agentUser._id,
+        type: 'cash-out',
+        amount: commissionAmount,
+        transactionAmount: amount,
+        transactionId: transaction._id,
+      },
+      session
+    );
+
+
+    await session.commitTransaction();
+
+    return {
+      transaction,
+      commissionAmount,
+    };
+  } catch (error) {
+
+    await session.abortTransaction();
+    throw error;
+  } finally {
+
+    session.endSession();
   }
-  if (wallet.status !== 'ACTIVE') {
-    throw new AppError(httpStatus.FORBIDDEN, 'Wallet is blocked');
-  }
-  if (wallet.balance < amount) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'Insufficient balance');
-  }
-  wallet.balance -= amount;
-  await wallet.save();
-  await Transaction.create({ from: userId, amount, type: 'WITHDRAW' });
-  return wallet;
-}
+};
+
+
+
 
 // agent services
 
@@ -57,23 +142,41 @@ const cashIn = async (agentId: string, toUserId: string, amount: number) => {
   try {
     session.startTransaction();
 
-    const toWallet = await Wallet.findOne({ user: toUserId, status: 'ACTIVE' }).session(session);
-    if (!toWallet) {
+
+    const agentUser = await User.findOne({ email: agentId }).session(session);
+    if (!agentUser) {
+      throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+    }
+    const toUser = await User.findOne({ email: toUserId, role: Role.USER }).session(session);
+    if (!toUser) {
+      throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+    }
+
+    const agentWallet = await Wallet.findOne({ user: agentUser._id, status: 'ACTIVE' }).session(session);
+    if (!agentWallet) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Receiver wallet not found or blocked');
+    }
+    const userWallet = await Wallet.findOne({ user: toUser._id, status: 'ACTIVE' }).session(session);
+    if (!userWallet) {
       throw new AppError(httpStatus.NOT_FOUND, 'Receiver wallet not found or blocked');
     }
 
+    agentWallet.balance -= amount;
+    userWallet.balance += amount;
 
-    toWallet.balance += amount;
-    await toWallet.save({ session });
+
+    await userWallet.save({ session });
+    await agentWallet.save({ session });
 
 
     const [transaction] = await Transaction.create(
       [
         {
-          from: agentId,
-          to: toUserId,
+          from: agentUser._id,
+          to: toUser._id,
           amount,
           type: 'CASH_IN',
+          status: 'completed',
         },
       ],
       { session }
@@ -84,7 +187,7 @@ const cashIn = async (agentId: string, toUserId: string, amount: number) => {
 
     await CommissionService.createCommission(
       {
-        agent: new Types.ObjectId(agentId), 
+        agent: agentUser._id, 
         type: 'cash-in',                   
         amount: commissionAmount,
         transactionAmount: amount,
@@ -107,79 +210,34 @@ const cashIn = async (agentId: string, toUserId: string, amount: number) => {
 };
 
 
-const cashOut = async (agentId: string, userId: string,amount: number) => {
-  const session = await mongoose.startSession();
-  try {
-    session.startTransaction();
-
-    const fromWallet = await Wallet.findOne({ user: userId, status: 'ACTIVE' }).session(session);
-    if (!fromWallet) {
-      throw new AppError(httpStatus.NOT_FOUND, 'User wallet not found or blocked');
-    }
-
-    if (fromWallet.balance < amount) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'Insufficient balance');
-    }
 
 
-    fromWallet.balance -= amount;
-    await fromWallet.save({ session });
 
 
-    const [transaction] = await Transaction.create(
-      [
-        {
-          from: userId,
-          to: agentId,
-          amount,
-          type: 'CASH_OUT',
-        },
-      ],
-      { session }
-    );
+const getMyTransactions = async (userId: string, query: Record<string, string>) => {
 
-    // Commission logic
-    const commissionRate = await SystemService.getCommissionRate();
-    const commissionAmount = (amount * commissionRate) / 100;
+  const baseQuery = Transaction.find({
+    $or: [
+      { from: userId },
+      { to: userId },
+      { user: userId },
+    ],
+  });
 
-    await CommissionService.createCommission(
-      {
-        agent: new Types.ObjectId(agentId),
-        type: "cash-out",
-        amount: commissionAmount,
-        transactionAmount: amount,
-        transactionId: transaction._id,
-      },
-      session
-    );
+  const queryBuilder = new QueryBuilder(baseQuery, query);
 
-    await session.commitTransaction();
-    return {
-      transaction,
-      commissionAmount,
-    };
-  } catch (error) {
-    await session.abortTransaction();
-    throw error;
-  } finally {
-    session.endSession();
-  }
+  const [data, meta] = await Promise.all([
+    queryBuilder.sort().paginate().build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return { data, meta };
 };
 
 
 
-
-
-
-const getMyTransactions = async (userId: string) => {
-  const transactions = await Transaction.find({ $or: [{ from: userId }, { to: userId }] })
-    .sort({ createdAt: -1 });
-  return transactions;
-}
-
 export const transactionService = {
   sendMoney,
-  withdrawMoney,
   cashIn,
   cashOut,
   getMyTransactions,

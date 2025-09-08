@@ -4,24 +4,27 @@ import { envVar } from "../config/env";
 import { JwtPayload } from "jsonwebtoken";
 import AppError from "../errorBuilder/AppError";
 
+export const checkAuth =
+  (...authRole: string[]) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // Read token from cookies
+      const accessToken = req.cookies?.accessToken;
 
+      if (!accessToken) {
+        throw new AppError(403, "token is not provided");
+      }
 
-export const checkAuth = (...authRole : string[]) => (req: Request, res: Response, next: NextFunction) =>{
-try {
-        const accessToken = req.headers.authorization
+      const verifyToken = verifyTokens(accessToken, envVar.JWT_ACCESS_SECRET) as JwtPayload;
 
-    if(!accessToken){
-        throw new AppError(403, "token is not provided")
+      if (!authRole.includes(verifyToken.role)) {
+        throw new AppError(403, "forbidden access to this route");
+      }
+
+      req.user = verifyToken;
+      next();
+    } catch (error) {
+      console.log("jwt error", error);
+      next(error);
     }
-    const verifyToken = verifyTokens(accessToken, envVar.JWT_ACCESS_SECRET) as JwtPayload
-    if(!authRole.includes(verifyToken.role)){
-         throw new AppError(403, "forbidden access to this route")
-    }
-   req.user = verifyToken
-   next()
-    
-} catch (error) {
-    console.log("jwt error", error)
-    next(error)
-}
-}
+  };

@@ -9,7 +9,7 @@ import { WalletStatus } from "../wallet/wallet.interface";
 import { Wallet } from "../wallet/wallet.model";
 
 const createUser = async(payload : Partial<IUser>) =>{
-   const {email, password , ...rest} = payload
+   const {email, password ,role, ...rest} = payload
      if (!email || !password) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Email and password are required');
   }
@@ -17,11 +17,23 @@ const createUser = async(payload : Partial<IUser>) =>{
     if(isUserExist){
         throw new AppError(httpStatus.BAD_REQUEST, "user already exist")
     }
+
+    let assignedRole: Role = Role.USER; 
+
+  if (role === Role.AGENT) {
+    assignedRole = Role.AGENT; 
+  } else if (role === Role.ADMIN) {
+    assignedRole = Role.USER;    
+  } else {
+    assignedRole = Role.USER;  
+  }
+
     const hashPassword =  await bcrypt.hash(password as string, Number(envVar.BCRYPT_SALT_ROUND))
     const AuthProvider : IAuth =  {provider: "Credential", providerId: email as string}
     const user = await User.create({
         email,
         password: hashPassword,
+        role: assignedRole,
         auth: [AuthProvider],
         ...rest
     })
@@ -63,11 +75,16 @@ const updateUser = async (userId: string, payload:Partial<IUser>, decodedToken:J
         payload.password = await bcrypt.hash(payload.password, envVar.BCRYPT_SALT_ROUND)
     }
 
-    const newUserUpdate = await User.findByIdAndUpdate(userId, payload, {new : true})
+    const newUserUpdate = await User.findByIdAndUpdate(userId, payload, { new: true, runValidators: true })
     return newUserUpdate
 }
 
-
+const getMeService = async(userId: string) =>{
+    const user = await User.findById(userId).select("-password")
+    return {
+       data: user
+    }
+}
 
 const getAllUser = async() =>{
     const user = await User.find({})
@@ -100,5 +117,6 @@ export const userService ={
     updateUser,
     getAllUser,
     getUserById ,
-    getAgentCommissionById
+    getAgentCommissionById,
+    getMeService 
 }

@@ -3,13 +3,15 @@ import httpStatus from 'http-status-codes';
 import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 import { CommissionService } from './commission.service';
-import { userService } from '../user/user.service';
+
 
 
 
 const getAgentCommission = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.params.id;
-  const result = await userService.getAgentCommissionById(userId);
+  const userId = req.user.userId
+  const result = await CommissionService.getAgentCommissionSummary(userId);
+
+ 
 
   sendResponse(res, {
     success: true,

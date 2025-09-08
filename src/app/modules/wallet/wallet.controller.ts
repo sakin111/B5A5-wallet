@@ -8,14 +8,13 @@ import { walletService } from "./wallet.service";
 
 
  const getMyWallet = catchAsync(async(req: Request, res: Response, ) =>{
-
-     const userId = req.user.id;
+     const userId = req.user.userId;
      const result = await walletService.getWallet(userId)
 
          sendResponse(res,{
            success: true,
-           statusCode: httpStatus.CREATED,
-           message: "user created successfully",
+           statusCode: httpStatus.OK,
+           message: "Wallet retrieved successfully",
            data: result
          
             

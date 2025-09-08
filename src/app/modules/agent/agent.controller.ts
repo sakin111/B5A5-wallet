@@ -22,14 +22,16 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
 
 
 const getMyTransactions = catchAsync(async (req: Request, res: Response) => {
+  const query = req.query
   const agentId = req.user.userId;
-  const result = await AgentService.getAgentTransactions(agentId );
+  const result = await AgentService.getAgentTransactions(agentId, query as Record<string, string> );
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: 'Agent transactions fetched successfully',
     data: result,
+    meta: result.meta
   });
 });
 

@@ -11,7 +11,7 @@ import { walletController } from './wallet.controller';
 
 const router = express.Router();
 
-router.get('/me', checkAuth(Role.USER ), walletController.getMyWallet);
+router.get('/me', checkAuth(Role.USER, Role.AGENT ), walletController.getMyWallet);
 router.post('/add-money', checkAuth(Role.USER), validateRequest(AddMoneySchema), walletController.addMoney);
 router.patch('/block/:userId', checkAuth(Role.ADMIN), walletController.blockWallet);
 router.patch('/unblock/:userId', checkAuth(Role.ADMIN), walletController.unblockWallet);
