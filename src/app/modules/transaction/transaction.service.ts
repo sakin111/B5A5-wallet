@@ -52,7 +52,7 @@ const cashOut = async (fromEmail: string, agentEmail: string, amount: number) =>
   try {
     session.startTransaction();
 
-    const fromUser = await User.findOne({ email: fromEmail }).session(session);
+    const fromUser = await User.findOne({ email: fromEmail, role: Role.USER }).session(session);
     if (!fromUser) {
       throw new AppError(httpStatus.NOT_FOUND, 'User not found');
     }
@@ -211,6 +211,28 @@ const cashIn = async (agentId: string, toUserId: string, amount: number) => {
 
 
 
+const cashOutHistory = async (agentId: string, query: Record<string, string>) => {
+  const baseQuery = Transaction.find({
+    type: "CASH_OUT", 
+    $or: [
+      { from: agentId },
+      { to: agentId },   
+      { user: agentId }, 
+    ],
+  })
+    .populate("from", "name email role")
+    .populate("to", "name email role")
+    
+
+  const queryBuilder = new QueryBuilder(baseQuery, query);
+
+  const [data, meta] = await Promise.all([
+    queryBuilder.sort().paginate().build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return { data, meta };
+};
 
 
 
@@ -241,5 +263,6 @@ export const transactionService = {
   cashIn,
   cashOut,
   getMyTransactions,
+  cashOutHistory
  
 };

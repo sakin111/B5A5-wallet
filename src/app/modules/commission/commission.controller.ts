@@ -24,13 +24,14 @@ const getAgentCommission = catchAsync(async (req: Request, res: Response) => {
 
 
 const getAllCommissions = catchAsync(async (req: Request, res: Response) => {
-  const commissions = await CommissionService.getAllCommissions();
+  const result = await CommissionService.getAllCommissions(req.query as Record<string, string>);
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: 'All commissions fetched successfully',
-    data: commissions,
+    data: result.data,  
+    meta: result.meta,  
   });
 });
 

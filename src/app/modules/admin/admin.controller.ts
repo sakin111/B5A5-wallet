@@ -5,6 +5,7 @@ import httpStatus from 'http-status-codes';
 import { AdminService } from './admin.service';
 import { sendResponse } from '../../utils/sendResponse';
 import { SystemService } from '../system/system.service';
+import { IUser } from '../user/user.interface';
 
 const getAllUsers = catchAsync(async (_req: Request, res: Response) => {
   const result = await AdminService.getAllUsers();
@@ -26,15 +27,29 @@ const getAllWallets = catchAsync(async (_req: Request, res: Response) => {
   });
 });
 
-const getAllTransactions = catchAsync(async (_req: Request, res: Response) => {
-  const result = await AdminService.getAllTransactions();
+const getAllTransactions = catchAsync(async (req: Request, res: Response) => {
+  const result = await AdminService.getAllTransactions(req.query as Record<string, string>);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Transactions retrieved successfully',
-    data: result,
+    message: "Transactions retrieved successfully",
+    data: result.data,
+    meta: result.meta,
   });
 });
+
+
+const AllTransactions = catchAsync(async (req: Request, res: Response) => {
+  const result = await AdminService.AllTransactions();
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Transactions retrieved successfully",
+    data: result
+
+  });
+});
+
 
 
 const approveAgent = catchAsync(async (req: Request, res: Response) => {
@@ -93,6 +108,41 @@ const setCommissionRate = catchAsync(async (req: Request, res: Response) => {
 });
 
 
+
+const  AdminProfile = catchAsync(async(req: Request, res: Response) =>{
+        const userId = req.user.userId;
+ 
+        const result = await AdminService.getAdminService(userId)
+        sendResponse(res,{
+           success: true,
+           statusCode: httpStatus.OK,
+           message: "user retrieve successfully",
+           data: result.data,
+
+         
+            
+         })
+})
+
+
+ const updatedAdmin = catchAsync(async(req: Request, res: Response) =>{
+
+  const userId = req.params.id
+  const verifyToken = req.user
+ const payload: Partial<IUser> = req.body;
+
+     const result = await AdminService.updateAdmin(userId, payload, verifyToken)
+
+         sendResponse(res,{
+           success: true,
+           statusCode: httpStatus.OK,
+           message: "user updated  successfully",
+           data: result
+         
+            
+         })
+ }) 
+
 export const AdminController = {
   getAllUsers,
   getAllWallets,
@@ -102,4 +152,7 @@ export const AdminController = {
   activeAgent,
   getCommissionRate,
   setCommissionRate,
+  AllTransactions,
+  AdminProfile,
+  updatedAdmin
 };

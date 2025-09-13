@@ -17,7 +17,6 @@ export enum IStatus {
   BLOCKED = "BLOCKED",
   SUSPENDED = "SUSPENDED",
   APPROVED = "APPROVED",
-
 }
 
 

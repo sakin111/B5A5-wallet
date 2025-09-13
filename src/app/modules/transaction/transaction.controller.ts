@@ -59,9 +59,25 @@ const getMyTransactions = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const cashOutHistory = catchAsync(async (req: Request, res: Response) => {
+  const agentId = req.user.id;
+   const query = req.query
+  const result = await transactionService.cashOutHistory(agentId, query as Record<string, string>);
+
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Transaction history fetched successfully',
+    data: result,
+    meta: result.meta,
+  });
+});
+
 export const TransactionController = {
   sendMoney,
   cashIn,
   cashOut,
   getMyTransactions,
+  cashOutHistory 
 };

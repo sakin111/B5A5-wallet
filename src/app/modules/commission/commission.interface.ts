@@ -10,3 +10,21 @@ export interface ICommission {
 }
 
 
+export interface ICommissionQuery {
+  page?: string;
+  limit?: string;
+  searchTerm?: string;
+  type?: string;
+  sort?: string;
+}
+
+export interface ICommissionSummary {
+  _id: string;
+  name: string;
+  email: string;
+  totalCommissions: number;
+  totalCommission: number;
+  lastCommissionDate: Date | null;
+  createdAt: Date;
+}
+
