@@ -30,8 +30,8 @@ const AllTransactions = async () => {
 
 export const getAllTransactions = async (query: ITransactionQuery): Promise<{ data: IUserTransactionSummary[]; meta: { page: number; limit: number; total: number; totalPages: number } }> => {
  
-  let userQuery = User.find();
-  const userQueryBuilder = new QueryBuilder(userQuery, query);
+  const userQuery = User.find();
+  const userQueryBuilder = new QueryBuilder(userQuery, query as Record<string, string>);
   userQueryBuilder.filter();
   userQueryBuilder.search(["name", "email"]);
   const allUsers = await userQueryBuilder.modelQuery.exec();
@@ -78,12 +78,12 @@ export const getAllTransactions = async (query: ITransactionQuery): Promise<{ da
         name: user.name,
         email: user.email,
         status: user.status,
-        role: user.role,
+        role: user.role || Role.USER,
         transactionsByType: typeCounts,
         totalTransactions: transactions.length,
         totalVolume,
         lastTransactionType,
-        createdAt: user.createdAt,
+        createdAt: user.createdAt || new Date(),
       };
     })
   );
