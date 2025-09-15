@@ -3,9 +3,15 @@
 import { Response } from "express";
 
 
-interface TMeta {
-    totalUser: number
+
+    interface TMeta {
+    totalUser?: number;
+    page?: number;
+    limit?: number;
+    total?: number;
+    totalPages?: number;
 }
+
 
 interface TResponse<T> {
     statusCode : number,

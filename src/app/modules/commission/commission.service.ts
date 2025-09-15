@@ -64,8 +64,8 @@ export const getAllCommissions = async (
   meta: { page: number; limit: number; total: number; totalPages: number };
 }> => {
   // Step 1: Find agents with QueryBuilder
-  let agentQuery = User.find({ role: "AGENT" });
-  const agentQueryBuilder = new QueryBuilder(agentQuery, query);
+  const agentQuery = User.find({ role: "AGENT" });
+  const agentQueryBuilder = new QueryBuilder(agentQuery, query as Record<string, string>);
 
   agentQueryBuilder.filter();
   agentQueryBuilder.search(["name", "email"]);
@@ -120,7 +120,7 @@ export const getAllCommissions = async (
         totalCommissions: commissions.length,
         totalCommission,
         lastCommissionDate,
-        createdAt: agent.createdAt,
+        createdAt: agent.createdAt || new Date(),
       };
     })
   );
