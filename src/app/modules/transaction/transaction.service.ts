@@ -236,6 +236,26 @@ const cashOutHistory = async (agentId: string, query: Record<string, string>) =>
 
 
 
+const getMyTransactionStats = async (userId: string, query: Record<string, string>) => {
+
+  const baseQuery = Transaction.find({
+    $or: [
+      { from: userId },
+      { to: userId },
+      { user: userId },
+    ],
+  });
+
+  const queryBuilder = new QueryBuilder(baseQuery, query);
+
+  const [data, meta] = await Promise.all([
+    queryBuilder.sort().build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return { data, meta };
+};
+
 const getMyTransactions = async (userId: string, query: Record<string, string>) => {
 
   const baseQuery = Transaction.find({
@@ -263,6 +283,7 @@ export const transactionService = {
   cashIn,
   cashOut,
   getMyTransactions,
+  getMyTransactionStats,
   cashOutHistory
  
 };

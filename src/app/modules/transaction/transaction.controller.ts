@@ -45,6 +45,20 @@ const cashIn = catchAsync(async (req: Request, res: Response) => {
 
 
 
+const getMyTransactionStats = catchAsync(async (req: Request, res: Response) => {
+   const query = req.query
+  const result = await transactionService.getMyTransactionStats(req.user.id, query as Record<string, string>);
+
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Transaction history fetched successfully',
+    data: result,
+    meta: result.meta,
+  });
+});
+
 const getMyTransactions = catchAsync(async (req: Request, res: Response) => {
    const query = req.query
   const result = await transactionService.getMyTransactions(req.user.id, query as Record<string, string>);
@@ -79,5 +93,6 @@ export const TransactionController = {
   cashIn,
   cashOut,
   getMyTransactions,
+  getMyTransactionStats,
   cashOutHistory 
 };

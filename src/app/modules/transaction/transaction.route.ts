@@ -14,6 +14,7 @@ const router = express.Router();
 
 // Users
 router.get('/me', checkAuth(Role.USER, Role.AGENT), TransactionController.getMyTransactions);
+router.get('/meStats', checkAuth(Role.USER, Role.AGENT), TransactionController.getMyTransactionStats);
 router.post('/send', checkAuth(Role.USER), validateRequest(SendMoneySchema), TransactionController.sendMoney);
 router.post('/withdraw', checkAuth(Role.USER), validateRequest(WithdrawSchema), TransactionController.cashOut);
 
