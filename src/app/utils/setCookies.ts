@@ -25,3 +25,9 @@ export const setAuthCookies = (res : Response, tokenInfo : AuthToken) =>{
       } )
    }
 }
+
+
+// for development
+
+//   secure: process.env.NODE_ENV === "production", // true only in prod
+//   sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",

@@ -7,7 +7,7 @@ const transactionSchema = new Schema<ITransaction>(
     from: { type: Schema.Types.ObjectId, ref: 'User' },
     to: { type: Schema.Types.ObjectId, ref: 'User' },
     amount: { type: Number, required: true },
-    status: { type: String, enum: ['pending', 'completed', 'reversed'], default: 'pending' },
+    status: { type: String, enum: ['pending', 'completed', 'reversed'], default: 'completed' },
   },
   { timestamps: true }
 );
