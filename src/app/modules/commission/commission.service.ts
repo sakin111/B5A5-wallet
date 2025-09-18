@@ -63,7 +63,7 @@ export const getAllCommissions = async (
   data: ICommissionSummary[];
   meta: { page: number; limit: number; total: number; totalPages: number };
 }> => {
-  // Step 1: Find agents with QueryBuilder
+
   const agentQuery = User.find({ role: "AGENT" });
   const agentQueryBuilder = new QueryBuilder(agentQuery, query as Record<string, string>);
 
@@ -72,7 +72,7 @@ export const getAllCommissions = async (
 
   const allAgents = await agentQueryBuilder.modelQuery.exec();
 
-  // fallback if search yields nothing
+
   let agentsToSummarize = allAgents;
   if (agentsToSummarize.length === 0) {
     const simpleQuery: Record<string, any> = { role: "AGENT" };
@@ -125,13 +125,13 @@ export const getAllCommissions = async (
     })
   );
 
-  // Step 3: Filtered summary (optional)
+
   let filteredSummary = summary;
   if (query.type?.toLowerCase() && query.type.toLowerCase() !== "") {
     filteredSummary = summary.filter((s) => s.totalCommissions > 0);
   }
 
-  // Step 4: Sorting
+
   if (query.sort) {
     if (query.sort === "totalCommission") {
       filteredSummary.sort((a, b) => b.totalCommission - a.totalCommission);
@@ -148,7 +148,6 @@ export const getAllCommissions = async (
     }
   }
 
-  // Step 5: Pagination
   const page = parseInt(query.page || "1", 10);
   const limit = parseInt(query.limit || "10", 10);
   const startIndex = (page - 1) * limit;
