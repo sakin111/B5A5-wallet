@@ -13,7 +13,6 @@ export const setAuthCookies = (res: Response, tokenInfo: AuthToken) => {
          httpOnly: true,
          secure: true,
          sameSite: "none",
-         path: "/",
       })
    }
    if (tokenInfo.refreshToken) {
@@ -21,7 +20,6 @@ export const setAuthCookies = (res: Response, tokenInfo: AuthToken) => {
          httpOnly: true,
          secure: true,
          sameSite: "none",
-         path: "/",
       })
    }
 }
