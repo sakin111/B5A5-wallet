@@ -211,6 +211,25 @@ const cashIn = async (agentId: string, toUserId: string, amount: number) => {
 
 
 
+const cashOutHistoryCount = async (agentId: string, query: Record<string, string>) => {
+  const baseQuery = Transaction.find({
+    $or: [
+      { from: agentId },
+      { to: agentId },   
+      { user: agentId }, 
+    ],
+  })
+
+
+  const queryBuilder = new QueryBuilder(baseQuery, query);
+
+  const [data, meta] = await Promise.all([
+    queryBuilder.sort().build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return { data, meta };
+};
 const cashOutHistory = async (agentId: string, query: Record<string, string>) => {
   const baseQuery = Transaction.find({
     type: "CASH_OUT", 
@@ -284,6 +303,7 @@ export const transactionService = {
   cashOut,
   getMyTransactions,
   getMyTransactionStats,
-  cashOutHistory
+  cashOutHistory,
+  cashOutHistoryCount
  
 };

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 
 import { User } from '../user/user.model';
@@ -6,8 +7,8 @@ import { Transaction } from '../transaction/transaction.model';
 import AppError from '../../errorBuilder/AppError';
 import httpStatus from 'http-status-codes';
 import { IStatus, IUser, Role } from '../user/user.interface';
-import { QueryBuilder } from '../../utils/QueryBuilder';
-import { ITransactionQuery, IUserTransactionSummary } from './admin.interface';
+
+import { ITransactionQuery} from './admin.interface';
 import { JwtPayload } from 'jsonwebtoken';
 import { envVar } from '../../config/env';
 import bcrypt from 'bcryptjs';
@@ -28,98 +29,98 @@ const AllTransactions = async () => {
 
 
 
-export const getAllTransactions = async (query: ITransactionQuery): Promise<{ data: IUserTransactionSummary[]; meta: { page: number; limit: number; total: number; totalPages: number } }> => {
- 
-  const userQuery = User.find();
-  const userQueryBuilder = new QueryBuilder(userQuery, query as Record<string, string>);
-  userQueryBuilder.filter();
-  userQueryBuilder.search(["name", "email"]);
-  const allUsers = await userQueryBuilder.modelQuery.exec();
-
-  // If no users found, fallback to manual search
-  let usersToSummarize = allUsers;
-  if (usersToSummarize.length === 0) {
-    const simpleQuery: Record<string, any> = {};
-    if (query.searchTerm && query.searchTerm.trim() !== "") {
-      simpleQuery.$or = [
-        { name: { $regex: query.searchTerm, $options: "i" } },
-        { email: { $regex: query.searchTerm, $options: "i" } },
-      ];
-    }
-    usersToSummarize = await User.find(simpleQuery);
-  }
+export const getAllTransactions = async (query: ITransactionQuery) => {
+  const page = parseInt(query.page as string, 10) || 1;
+  const limit = parseInt(query.limit as string, 10) || 10;
+  const sort = query.sort === "-createdAt" ? -1 : 1;
+  const searchTerm = query.searchTerm?.toLowerCase() || "";
+  const typeFilter = query.type?.toUpperCase() || "";
 
 
-  const summary: IUserTransactionSummary[] = await Promise.all(
-    usersToSummarize.map(async (user) => {
-      const userId = user._id.toString();
-      const transactionQuery: Record<string, any> = {
-        $or: [{ from: userId }, { to: userId }],
-      };
-      if (query.type && query.type !== "") {
-        transactionQuery.type = query.type.toUpperCase();
-      }
-      const transactions = await Transaction.find(transactionQuery);
-      const typeCounts: Record<string, number> = {};
-      let totalVolume = 0;
-      let lastTransactionDate: Date | null = null;
-      let lastTransactionType = "";
-      transactions.forEach((t) => {
-        const type = t.type || "UNKNOWN";
-        typeCounts[type] = (typeCounts[type] || 0) + 1;
-        totalVolume += t.amount;
-        if (t.createdAt && (!lastTransactionDate || new Date(t.createdAt) > lastTransactionDate)) {
-          lastTransactionDate = new Date(t.createdAt);
-          lastTransactionType = type;
-        }
-      });
-      return {
-        _id: userId,
-        name: user.name,
-        email: user.email,
-        status: user.status,
-        role: user.role || Role.USER,
-        transactionsByType: typeCounts,
-        totalTransactions: transactions.length,
-        totalVolume,
-        lastTransactionType,
-        createdAt: user.createdAt || new Date(),
-      };
-    })
-  );
+  const pipeline: any[] = [
 
-  let filteredSummary = summary;
-  if (query.type && query.type !== "") {
-    filteredSummary = summary.filter((user) => user.totalTransactions > 0);
-  }
+    {
+      $lookup: {
+        from: "users",
+        localField: "from",
+        foreignField: "_id",
+        as: "from",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "to",
+        foreignField: "_id",
+        as: "to",
+      },
+    },
 
+    {
+      $unwind: { path: "$from", preserveNullAndEmptyArrays: true },
+    },
+    {
+      $unwind: { path: "$to", preserveNullAndEmptyArrays: true },
+    },
 
-  if (query.sort) {
-    if (query.sort === "totalVolume") {
-      filteredSummary.sort((a, b) => b.totalVolume - a.totalVolume);
-    } else if (query.sort === "-totalVolume") {
-      filteredSummary.sort((a, b) => a.totalVolume - b.totalVolume);
-    } else if (query.sort === "createdAt") {
-      filteredSummary.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
-    } else if (query.sort === "-createdAt") {
-      filteredSummary.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-    }
-  }
+    ...(typeFilter ? [{ $match: { type: typeFilter } }] : []),
 
-  // Pagination
-  const page = parseInt(query.page || "1", 10);
-  const limit = parseInt(query.limit || "10", 10);
-  const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
-  const paginatedData = filteredSummary.slice(startIndex, endIndex);
+    ...(searchTerm
+      ? [
+          {
+            $match: {
+              $or: [
+                { "from.email": { $regex: searchTerm, $options: "i" } },
+                { "to.email": { $regex: searchTerm, $options: "i" } },
+                { "from.name": { $regex: searchTerm, $options: "i" } },
+                { "to.name": { $regex: searchTerm, $options: "i" } },
+              ],
+            },
+          },
+        ]
+      : []),
+
+    { $sort: { createdAt: sort } },
+
+    { $skip: (page - 1) * limit },
+    { $limit: limit },
+
+    {
+      $project: {
+        _id: 1,
+        type: 1,
+        amount: 1,
+        status: 1,
+        createdAt: 1,
+        from: { name: 1, email: 1, role: 1, status: 1 },
+        to: { name: 1, email: 1, role: 1, status: 1 },
+      },
+    },
+  ];
+
+  const transactions = await Transaction.aggregate(pipeline);
+
+  const totalCountPipeline: any[] = [
+    ...pipeline.filter(
+      stage => !stage.$skip && !stage.$limit && !stage.$sort && !stage.$project
+    ),
+    { $count: "total" },
+  ];
+  const totalCountResult = await Transaction.aggregate(totalCountPipeline);
+  const total = totalCountResult[0]?.total || 0;
+
+  const totalPages = Math.ceil(total / limit);
+
   const meta = {
     page,
     limit,
-    total: filteredSummary.length,
-    totalPages: Math.ceil(filteredSummary.length / limit),
+    total,
+    totalPages,
   };
-  return { data: paginatedData, meta };
+
+  return { data: transactions, meta };
 };
+
 
 
 

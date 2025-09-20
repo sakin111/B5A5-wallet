@@ -20,6 +20,7 @@ router.post('/withdraw', checkAuth(Role.USER), validateRequest(WithdrawSchema), 
 
 // Agents
 router.post('/cash-in', checkAuth(Role.AGENT), validateRequest(CashInSchema), TransactionController.cashIn);
+router.get('/cashOutHistoryCount', checkAuth(Role.AGENT), TransactionController.cashOutHistoryCount);
 router.get('/cashOutHistory', checkAuth(Role.AGENT), TransactionController.cashOutHistory);
 
 

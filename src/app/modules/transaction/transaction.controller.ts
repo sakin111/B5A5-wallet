@@ -73,6 +73,20 @@ const getMyTransactions = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const cashOutHistoryCount = catchAsync(async (req: Request, res: Response) => {
+  const agentId = req.user.id;
+   const query = req.query
+  const result = await transactionService.cashOutHistoryCount(agentId, query as Record<string, string>);
+
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Transaction history fetched successfully',
+    data: result,
+    meta: result.meta,
+  });
+});
 const cashOutHistory = catchAsync(async (req: Request, res: Response) => {
   const agentId = req.user.id;
    const query = req.query
@@ -94,5 +108,6 @@ export const TransactionController = {
   cashOut,
   getMyTransactions,
   getMyTransactionStats,
-  cashOutHistory 
+  cashOutHistory ,
+  cashOutHistoryCount
 };

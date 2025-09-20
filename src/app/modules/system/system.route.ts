@@ -9,7 +9,7 @@ import { Role } from '../user/user.interface';
 
 const router = express.Router();
 
-router.get('/commission-rate', checkAuth(Role.ADMIN), SystemController.getCommissionRate);
+router.get('/commission-rate', checkAuth(Role.ADMIN, Role.AGENT), SystemController.getCommissionRate);
 router.patch(
   '/commission-rate',
   checkAuth(Role.ADMIN),
